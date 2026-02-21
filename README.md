@@ -7,6 +7,7 @@ A public Claude Code plugin marketplace — install developer tools directly int
 | Plugin | Description | Version |
 |--------|-------------|---------|
 | [dev-toolkit](./plugins/dev-toolkit/) | Developer utilities: project summarization, scaffolding, code explanation, commit checks, auto-formatting | 1.0.0 |
+| [task-manager](./plugins/task-manager/) | Persistent, version-controlled task management with TODO.md, per-task markdown files, and session context injection | 0.1.0 |
 
 ## Installation
 
