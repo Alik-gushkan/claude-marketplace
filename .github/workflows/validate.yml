@@ -1,0 +1,100 @@
+name: Validate Plugins
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate plugin manifests
+        run: |
+          echo "Validating plugin structure..."
+          errors=0
+
+          for plugin_dir in plugins/*/; do
+            plugin_name=$(basename "$plugin_dir")
+            echo ""
+            echo "=== Checking plugin: $plugin_name ==="
+
+            # Check plugin.json exists
+            manifest="$plugin_dir/.claude-plugin/plugin.json"
+            if [ ! -f "$manifest" ]; then
+              echo "ERROR: Missing $manifest"
+              errors=$((errors + 1))
+              continue
+            fi
+
+            # Validate JSON syntax
+            if ! jq empty "$manifest" 2>/dev/null; then
+              echo "ERROR: Invalid JSON in $manifest"
+              errors=$((errors + 1))
+              continue
+            fi
+
+            # Check required fields
+            name=$(jq -r '.name // empty' "$manifest")
+            if [ -z "$name" ]; then
+              echo "ERROR: Missing 'name' field in $manifest"
+              errors=$((errors + 1))
+            else
+              echo "  name: $name"
+            fi
+
+            version=$(jq -r '.version // empty' "$manifest")
+            if [ -z "$version" ]; then
+              echo "WARNING: Missing 'version' field in $manifest"
+            else
+              echo "  version: $version"
+            fi
+
+            description=$(jq -r '.description // empty' "$manifest")
+            if [ -z "$description" ]; then
+              echo "WARNING: Missing 'description' field in $manifest"
+            else
+              echo "  description: ${description:0:60}..."
+            fi
+
+            # Check for standard directories
+            for dir in skills commands agents hooks; do
+              if [ -d "$plugin_dir/$dir" ]; then
+                count=$(find "$plugin_dir/$dir" -type f | wc -l | tr -d ' ')
+                echo "  $dir/: $count file(s)"
+              fi
+            done
+
+            # Validate hooks.json if present
+            hooks_file="$plugin_dir/hooks/hooks.json"
+            if [ -f "$hooks_file" ]; then
+              if ! jq empty "$hooks_file" 2>/dev/null; then
+                echo "ERROR: Invalid JSON in $hooks_file"
+                errors=$((errors + 1))
+              else
+                echo "  hooks.json: valid"
+              fi
+            fi
+
+            # Check scripts are executable
+            if [ -d "$plugin_dir/scripts" ]; then
+              for script in "$plugin_dir/scripts/"*.sh; do
+                if [ -f "$script" ] && [ ! -x "$script" ]; then
+                  echo "WARNING: Script not executable: $script"
+                fi
+              done
+            fi
+
+            echo "  OK"
+          done
+
+          echo ""
+          if [ $errors -gt 0 ]; then
+            echo "FAILED: $errors error(s) found"
+            exit 1
+          else
+            echo "All plugins validated successfully."
+          fi
