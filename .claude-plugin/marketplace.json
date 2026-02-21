@@ -1,0 +1,31 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "alik-plugins",
+  "description": "Alik's Claude Code plugin marketplace — developer tools and utilities",
+  "owner": {
+    "name": "Alik Gushkan",
+    "url": "https://github.com/alikgushkan"
+  },
+  "plugins": [
+    {
+      "name": "dev-toolkit",
+      "description": "Developer utilities: project summarization, scaffolding, code explanation, commit checks, auto-formatting",
+      "version": "1.0.0",
+      "author": {
+        "name": "Alik Gushkan"
+      },
+      "source": "./plugins/dev-toolkit",
+      "category": "development"
+    },
+    {
+      "name": "task-manager",
+      "description": "Persistent, version-controlled task management with TODO.md, per-task markdown files, and session context injection",
+      "version": "0.1.0",
+      "author": {
+        "name": "Alik Gushkan"
+      },
+      "source": "./plugins/task-manager",
+      "category": "productivity"
+    }
+  ]
+}
