@@ -29,7 +29,6 @@ build_section() {
     return
   fi
 
-  shopt -s nullglob
   for f in "$dir"/*.md; do
     local id
     id="$(get_frontmatter "$f" "id")"

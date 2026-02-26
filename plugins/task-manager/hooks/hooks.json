@@ -1,5 +1,5 @@
 {
-  "description": "Task manager plugin — injects current task overview at session start",
+  "description": "Task manager plugin — session context injection and auto-regeneration hooks",
   "hooks": {
     "SessionStart": [
       {
@@ -8,6 +8,18 @@
             "type": "command",
             "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/session-start.sh",
             "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/post-task-write.sh",
+            "timeout": 5
           }
         ]
       }

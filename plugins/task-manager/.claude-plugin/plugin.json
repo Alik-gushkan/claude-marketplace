@@ -1,7 +1,7 @@
 {
   "name": "task-manager",
-  "description": "Persistent, version-controlled task management for Claude Code — track features, bugs, and ideas across sessions with TODO.md and per-task markdown files",
-  "version": "0.1.0",
+  "description": "Persistent, version-controlled task management for Claude Code — track features, bugs, and ideas across sessions with smart context injection, auto-regeneration, and per-project configuration",
+  "version": "0.2.0",
   "author": {
     "name": "Alik Gushkan"
   },
